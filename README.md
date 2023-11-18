@@ -1,6 +1,7 @@
 # Logitech Remote Key Mapper (LRKM)
 ![](https://img.shields.io/badge/Python-97ca00?style=for-the-badge&logo=python&logoColor=white)
 ![](https://img.shields.io/badge/Tested-Logitech%20R500-blue)
+![](https://img.shields.io/badge/Distro%20Tested-Debian%2012-orange)
 
 The **Logitech Remote Key Mapper** is a Python script designed to enhance the functionality of Logitech presentation remotes by providing a customizable button mapping solution for different Linux distros. The official Logitech App is not available in Linux-based distros. 
 
