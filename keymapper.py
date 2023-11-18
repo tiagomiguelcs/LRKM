@@ -37,7 +37,7 @@ def keymapper(event_id):
     remote_device = '/dev/input/event'+event_id
     # Create an InputDevice object for the R500s remote
     device = InputDevice(remote_device)
-    print(LOGO+" App running...")
+    print(LOGO+"App running...")
     for event in device.read_loop():
         if event.type == ecodes.EV_KEY:
             #if (event.value == 0): # Skip the second event, when event.value == 0

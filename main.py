@@ -85,6 +85,6 @@ if __name__ == "__main__":
         DEVICE_NAME = get_device_name_by_id(input())
         print(LOGO+"Creating Profile File for Device Name '"+DEVICE_NAME+"'")
         create_profile({'device_name': DEVICE_NAME},"./profile.yaml")
-    else:
-        device_id = get_device_id_by_name(read_yaml_property(PROFILE,"device_name"))
-        keymapper(device_id)
+
+    device_id = get_device_id_by_name(read_yaml_property(PROFILE,"device_name"))
+    keymapper(device_id)
