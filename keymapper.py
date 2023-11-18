@@ -5,10 +5,8 @@ DEBUG = False
 # Set the key codes for the remote keys
 LEFT_KEYCODE = 105  # Remote's Keycode for LEFT button (TODO: make this configurable in the profile file)
 RIGHT_KEYCODE = 106  # Remote's Keycode for RIGHT button (TODO: make this configurable in the profile file)
-# Define flags to keep track of key states and timing
-left_key_pressed = False
-right_key_pressed = False
-event_number = 1
+
+
 
 """
 Execute a command using xdotool to a window that is in focus
@@ -33,6 +31,12 @@ def execute(command,times,arg=""):
         print("[Remote] Error Window not found.")
 
 def keymapper(event_id):
+    # Define flags to keep track of key states and timing
+    left_key_pressed = False
+    right_key_pressed = False
+    event_number = 1
+    global RIGHT_KEYCODE
+    global LEFT_KEYCODE
     # Replace '/dev/input/eventX' with the actual event device for your R500s remote
     remote_device = '/dev/input/event'+event_id
     # Create an InputDevice object for the R500s remote
@@ -54,7 +58,7 @@ def keymapper(event_id):
             if (DEBUG): print(" > Left click="+str(left_key_pressed))
             if (DEBUG): print(" > Right Click="+str(right_key_pressed))
             
-            if (event_number==2): # Only analsy flags after second event
+            if (event_number==2): # Only check flags after second event
                 if (DEBUG): print("  > Taking decisions:")
                 if (left_key_pressed and right_key_pressed):
                     if (DEBUG): print("    > Both keys were pressed")

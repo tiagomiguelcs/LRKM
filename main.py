@@ -1,7 +1,7 @@
 import evdev, yaml, pathlib, sys, os
 from keymapper import keymapper
 LOGO = "[LRKM] - "
-PROFILE = pathlib.Path("profile.yaml")
+PROFILE = pathlib.Path(str(pathlib.Path(__file__).resolve().parent)+"/profile.yaml")
 DEVICE_NAME = ""
 
 """
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         print(LOGO+"Please, enter device id to be used (/dev/input/eventX, where X is the device ID):", end=" ")
         DEVICE_NAME = get_device_name_by_id(input())
         print(LOGO+"Creating Profile File for Device Name '"+DEVICE_NAME+"'")
-        create_profile({'device_name': DEVICE_NAME},"./profile.yaml")
-
+        create_profile({'device_name': DEVICE_NAME},PROFILE)
+    # Run the keymapper
     device_id = get_device_id_by_name(read_yaml_property(PROFILE,"device_name"))
     keymapper(device_id)
