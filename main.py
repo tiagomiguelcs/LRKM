@@ -47,7 +47,7 @@ def get_device_id_by_name(device_name):
     for device in devices:
         path = device.path+""
         if path=="None": continue
-        # print(device.name)
+        # print(device)
         if (device.name == device_name):
             return(path[path.rindex("/")+6:])
 """ 
@@ -86,5 +86,7 @@ if __name__ == "__main__":
         print(LOGO+"Creating Profile File for Device Name '"+DEVICE_NAME+"'")
         create_profile({'device_name': DEVICE_NAME},PROFILE)
     # Run the keymapper
-    device_id = get_device_id_by_name(read_yaml_property(PROFILE,"device_name"))
-    keymapper(device_id)
+    dname = read_yaml_property(PROFILE,"device_name")
+    did = get_device_id_by_name(dname)
+    print(LOGO+"Connecting to device id '"+str(did)+"' ("+dname+")...")
+    keymapper(did)
