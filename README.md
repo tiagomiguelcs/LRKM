@@ -13,3 +13,6 @@ This solution allows users to map each button on the Logitech remote to a differ
 1. Install dependencies as follows: `sudo apt install xdotool python3-evdev`.
 2. Add the execute permission to `main.sh` as follows: `chmod +x main.sh`.
 4. Run LRKM as follows: `./main.sh`.
+
+On debian 12, install the necessary yaml module as follows:
+`sudo apt install python3-yaml`
