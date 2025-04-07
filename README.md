@@ -7,7 +7,7 @@ The **Logitech Remote Key Mapper** is a Python script designed to enhance the fu
 
 This solution allows users to map each button on the Logitech remote to a different keyboard or mouse button, enabling a more personalized and efficient control experience during presentations or other use cases (_e.g.,_ presenting the content of a Web Page where the Left button in the Logitech remote needs to be remapped to mouse scroll up or down).
 
-**Feel free to fork the repo, happy codding! 🙃**
+**Feel free to fork the repo, happy coding! 🙃**
 
 # Installation and Usage
 1. Install dependencies as follows: `sudo apt install xdotool python3-evdev`.
