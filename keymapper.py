@@ -1,11 +1,10 @@
 from evdev import InputDevice, categorize, ecodes
 import subprocess
 LOGO = "[LRKM] - "
-DEBUG = False
+DEBUG = True
 # Set the key codes for the remote keys
 LEFT_KEYCODE = 105  # Remote's Keycode for LEFT button (TODO: make this configurable in the profile file)
 RIGHT_KEYCODE = 106  # Remote's Keycode for RIGHT button (TODO: make this configurable in the profile file)
-
 
 
 """
@@ -24,8 +23,10 @@ def execute(command,times,arg=""):
         count = 1
         # Execute x times the command (user provided)
         while count <= times:
-             # Execute xdotool on a specified window
-            subprocess.call(["xdotool", "key", "--window", window_focus_id, arg, command])
+            # Execute xdotool on a specified window
+            # The following is not working in Fedora Wayland only in Ubuntu X11 (comment for now):
+            # subprocess.call(["xdotool", "key", "--window", window_focus_id, arg, command])
+            subprocess.call(["xdotool", arg, "--window", window_focus_id, command])
             count += count
     else:
         print("[Remote] Error Window not found.")
@@ -62,12 +63,15 @@ def keymapper(event_id):
                 if (DEBUG): print("  > Taking decisions:")
                 if (left_key_pressed and right_key_pressed):
                     if (DEBUG): print("    > Both keys were pressed")
+                    # The fullscreen F11 will not work on wayland!
                     execute("F11", 1)
                 elif(left_key_pressed):
                     if (DEBUG): print("    > Left key pressed")
+                    # In xdotool, 5 = wheel down
                     execute("5",3, "click")
                 elif(right_key_pressed):
                     if (DEBUG): print("    > Right key pressed")
+                    # In xdotool, 4 = wheel up
                     execute("4",3, "click")
                     # execute("Left",1) // A right key will be sent, reverse to the left!
                     
