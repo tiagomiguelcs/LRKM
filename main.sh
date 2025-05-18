@@ -9,6 +9,8 @@ is_wayland() {
     fi
 }
 SESSION=$(is_wayland)
-sudo killall ydotoold 
-sudo ydotoold &
+if [ "$SESSION" = "wayland" ]; then
+    sudo killall ydotoold
+    sudo ydotoold &
+fi
 sudo python3 "$SCRIPT_DIR"/main.py --session "$SESSION"

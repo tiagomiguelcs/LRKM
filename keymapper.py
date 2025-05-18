@@ -1,7 +1,7 @@
 from evdev import InputDevice, categorize, ecodes
 import subprocess, os
 LOGO = "[LRKM] - "
-DEBUG = True
+DEBUG = False
 # Set the key codes for the remote keys
 LEFT_KEYCODE = 105  # Remote's Keycode for LEFT button (TODO: make this configurable in the profile file)
 RIGHT_KEYCODE = 106  # Remote's Keycode for RIGHT button (TODO: make this configurable in the profile file)
