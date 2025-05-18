@@ -1,21 +1,24 @@
 from evdev import InputDevice, categorize, ecodes
-import subprocess
+import subprocess, os
 LOGO = "[LRKM] - "
-DEBUG = False
+DEBUG = True
 # Set the key codes for the remote keys
 LEFT_KEYCODE = 105  # Remote's Keycode for LEFT button (TODO: make this configurable in the profile file)
 RIGHT_KEYCODE = 106  # Remote's Keycode for RIGHT button (TODO: make this configurable in the profile file)
 
-
+def execute_wayland(command, event, args=""):
+    if (DEBUG): print("ydotool ",command, event, args)
+    if (isinstance(args, tuple)):
+        p = ["ydotool", command, event]
+        for arg in args:
+            p.append(arg) 
+        subprocess.call(p)
+    else:
+        subprocess.call(["ydotool", command, event, args])
 """
 Execute a command using xdotool to a window that is in focus
 """
-def execute(command,times,arg=""):
-    # Use xdotool to search for a window by its name
-    # xdotool_output = subprocess.check_output(["xdotool", "search", "--name", window_name]).decode("utf-8")
-    # window_ids = xdotool_output.strip().split("\n")
-    # window_id = window_ids[0]
-
+def execute_x11(command,times,arg=""):
     xdotool_output = subprocess.check_output(["xdotool", "getwindowfocus"]).decode("utf-8")
     window_focus_id = xdotool_output.strip().split("\n")[0]
     if (DEBUG): print(" > ID of the window in focus:"+str(window_focus_id))
@@ -24,14 +27,13 @@ def execute(command,times,arg=""):
         # Execute x times the command (user provided)
         while count <= times:
             # Execute xdotool on a specified window
-            # The following is not working in Fedora Wayland only in Ubuntu X11 (comment for now):
-            # subprocess.call(["xdotool", "key", "--window", window_focus_id, arg, command])
-            subprocess.call(["xdotool", arg, "--window", window_focus_id, command])
+            if (DEBUG): print("xdotool "+arg+" --window "+str(window_focus_id)+" "+command)
+            subprocess.call(["xdotool", "key", "--window", window_focus_id, arg, command])
             count += count
     else:
         print("[Remote] Error Window not found.")
 
-def keymapper(event_id):
+def keymapper(event_id, session):
     # Define flags to keep track of key states and timing
     left_key_pressed = False
     right_key_pressed = False
@@ -63,22 +65,36 @@ def keymapper(event_id):
                 if (DEBUG): print("  > Taking decisions:")
                 if (left_key_pressed and right_key_pressed):
                     if (DEBUG): print("    > Both keys were pressed")
-                    # The fullscreen F11 will not work on wayland!
-                    execute("F11", 1)
+                    if (session=="wayland"):
+                        # -w == -wheel 
+                        # This is not working as expected, it "locks" the F11
+                        # key and only unlocks the key after killing the app
+                        arg = ("87",":1", "87", ":0") # Keycode for F11
+                        execute_wayland("key", "", arg);
+                    else:
+                        # The fullscreen F11 will not work on wayland!
+                        execute_x11("F11", 1)
                 elif(left_key_pressed):
                     if (DEBUG): print("    > Left key pressed")
-                    # In xdotool, 5 = wheel down
-                    execute("5",3, "click")
+                    if (session=="wayland"):
+                        # -w == -wheel 
+                        arg = ("-x", "0", "-y", "-2")
+                        execute_wayland("mousemove", "-w", arg);
+                    else:
+                        # In xdotool, 5 = wheel down
+                        execute_x11("5",3, "click")
                 elif(right_key_pressed):
                     if (DEBUG): print("    > Right key pressed")
-                    # In xdotool, 4 = wheel up
-                    execute("4",3, "click")
-                    # execute("Left",1) // A right key will be sent, reverse to the left!
-                    
+                    if (session=="wayland"):
+                        # -w == -wheel 
+                        arg = ("-x", "0", "-y", "2")
+                        execute_wayland("mousemove", "-w", arg);
+                    else:
+                        # In xdotool, 4 = wheel up
+                        execute_x11("4",3, "click")
                 # after the second event all keys are reseted
                 right_key_pressed = False
                 left_key_pressed = False
-                    
             event_number += event_number
             # Reset the event number after the second one
             if (event_number > 2): event_number = 1

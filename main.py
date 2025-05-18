@@ -1,4 +1,4 @@
-import evdev, yaml, pathlib, sys, os
+import evdev, yaml, pathlib, sys, os, argparse
 from keymapper import keymapper
 LOGO = "[LRKM] - "
 PROFILE = pathlib.Path(str(pathlib.Path(__file__).resolve().parent)+"/profile.yaml")
@@ -78,6 +78,10 @@ def read_yaml_property(file_path, property_name):
         return None
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Logitech Remote Key Mapper (LRKM)")
+    parser.add_argument("--session","-s", type=str, help="Define session x11|wayland")
+    args = parser.parse_args()
+    # print(args.session)
     if not PROFILE.is_file():
         os.system('clear')
         scan_devices()
@@ -89,4 +93,4 @@ if __name__ == "__main__":
     dname = read_yaml_property(PROFILE,"device_name")
     did = get_device_id_by_name(dname)
     print(LOGO+"Connecting to device id '"+str(did)+"' ("+dname+")...")
-    keymapper(did)
+    keymapper(did, args.session)
