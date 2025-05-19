@@ -1,5 +1,5 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-SESSION="x11"
+VERBOSE=1
 # Identify current session, wayland or x11
 is_wayland() {
     if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
@@ -10,7 +10,12 @@ is_wayland() {
 }
 SESSION=$(is_wayland)
 if [ "$SESSION" = "wayland" ]; then
-    sudo killall ydotoold
-    sudo ydotoold &
+    if [ "$VERBOSE" = 0 ]; then
+        sudo killall ydotoold &> /dev/null
+        sudo ydotoold &> /dev/null &
+    else
+        sudo killall ydotoold
+        sudo ydotoold &
+    fi
 fi
 sudo python3 "$SCRIPT_DIR"/main.py --session "$SESSION"
